@@ -120,6 +120,7 @@ dependencies {
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.util)
+    implementation(libs.compose.animated)
 
     debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.compose.ui.tooling.debug)
@@ -143,6 +144,10 @@ dependencies {
     // Retrofit & Gson
     implementation(libs.retrofit)
     implementation(libs.gson)
+    implementation(libs.converter.gson)
+    implementation(libs.converter.scalars)
+    implementation (libs.okhttp)
+    implementation(libs.logging.interceptor) //log interceptor
 
     // Material 3
     implementation(libs.material3)
@@ -156,6 +161,9 @@ dependencies {
 
     // Lottie
     implementation(libs.lottie.compose)
+
+    //show images
+    implementation(libs.coil.compose)
 
     // Timber
     implementation(libs.timber)

@@ -1,6 +1,5 @@
-package com.maggiver.marketshop.ui.theme
+package com.maggiver.marketshop.core.view.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

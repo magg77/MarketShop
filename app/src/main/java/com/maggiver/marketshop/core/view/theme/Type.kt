@@ -1,4 +1,4 @@
-package com.maggiver.marketshop.ui.theme
+package com.maggiver.marketshop.core.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
