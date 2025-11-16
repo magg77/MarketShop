@@ -2,6 +2,7 @@ package com.maggiver.marketshop.home.data.repository.remote
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import com.maggiver.marketshop.core.utils.ConnectionManager
 import com.maggiver.marketshop.core.valueObjects.ResourceState
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductsResponse
@@ -24,6 +25,7 @@ ProductsRemoteRepository{
         // verificar conexion de red
         if (!ConnectionManager.isNetworkAvailable(application.applicationContext)) {
             send(ResourceState.FailureState("Verifica tu conexión de red"))
+            return@channelFlow      // Detiene el flujo aquí mismo
         }
 
         // emitir estado de carga
@@ -32,6 +34,7 @@ ProductsRemoteRepository{
         when(val responseProducts = dataSourceRemoteProducts.getProductsRemote()) {
 
             is ResourceState.SuccessState -> {
+                Log.i("products3", "Repository = ${responseProducts.data}")
                 send(ResourceState.SuccessState(responseProducts.data))
             }
 

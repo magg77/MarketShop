@@ -24,26 +24,38 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.maggiver.marketshop.R
 import com.maggiver.marketshop.core.valueObjects.ResourceState
+import com.maggiver.marketshop.core.view.components.ErrorContent
 import com.maggiver.marketshop.home.data.provider.remote.model.Product
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductsResponse
 import com.maggiver.marketshop.home.presentation.ProductsViewModel
@@ -53,29 +65,37 @@ fun HomeScreen(
     viewModelProducts: ProductsViewModel = hiltViewModel()
 ) {
 
-    val uiState = viewModelProducts.uiStateProducts.collectAsState()
+    //val uiState = viewModelProducts.uiStateProducts.collectAsState().value
+    val uiState = viewModelProducts.uiStateFlowProducts.collectAsStateWithLifecycle().value
+    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(modifier = Modifier
+    LaunchedEffect (uiState) {
+        if (uiState is ResourceState.FailureState) {
+            snackbarHostState.showSnackbar(uiState.message)
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = Modifier
         .fillMaxSize()
         .background(Color(0xFFE80000)))
-    {
-        Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFE80000))
-        ) { padding ->
+    { padding ->
 
-            when (val state = uiState.value) {
+            when (uiState) {
 
                 is ResourceState.LoadingState -> {
-                    Text("Cargando...", modifier = Modifier.padding(padding))
+                    //Text("Cargando...", modifier = Modifier.padding(padding))
+                    CircularProgressIndicatorOffers(statusLoading = true)
                 }
 
                 is ResourceState.SuccessState -> {
 
-                    Log.i("products3", "${state.data}")
+                    CircularProgressIndicatorOffers(statusLoading = false)
+
                     HomeContent(
-                        products = state.data,
+                        products = uiState.data,
                         modifier = Modifier.padding(padding)
                     )
 
@@ -83,11 +103,21 @@ fun HomeScreen(
                 }
 
                 is ResourceState.FailureState -> {
-                    Text("Error: ${state.message}", modifier = Modifier.padding(padding))
+                    //Text("Error: ${uiState.message}", modifier = Modifier.padding(padding))
+                    CircularProgressIndicatorOffers(statusLoading = false)
+
+                    ErrorContent(
+                        message = uiState.message,
+                        modifier = Modifier.padding(padding),
+                        onRetry = {
+                            viewModelProducts.productsStateInFlow()
+                        }
+                    )
+
                 }
 
-            }
-        }
+            } // when
+
     }
 
 }
@@ -239,5 +269,23 @@ fun ProductCard(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun CircularProgressIndicatorOffers(statusLoading: Boolean) {
+    if (statusLoading) {
+
+        val preloaderLottieComposition by rememberLottieComposition(
+            spec = LottieCompositionSpec.RawRes(
+                R.raw.animation_loading
+            )
+        )
+        val preloaderProgress by animateLottieCompositionAsState(
+            composition = preloaderLottieComposition,
+            iterations = LottieConstants.IterateForever,
+            isPlaying = true
+        )
+        LottieAnimation(composition = preloaderLottieComposition, progress = { preloaderProgress })
     }
 }

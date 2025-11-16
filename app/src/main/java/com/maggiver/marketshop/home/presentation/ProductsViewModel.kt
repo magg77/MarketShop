@@ -13,9 +13,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,8 +35,16 @@ class ProductsViewModel @Inject constructor(
     private var _uiStateProducts = MutableStateFlow<ResourceState<ProductsResponse>>(ResourceState.LoadingState())
     val uiStateProducts: StateFlow<ResourceState<ProductsResponse>> = _uiStateProducts
 
+    val uiStateFlowProducts: StateFlow<ResourceState<ProductsResponse>> = _uiStateProducts.asStateFlow().stateIn(
+        scope = viewModelScope,
+        initialValue = ResourceState.LoadingState(),
+        started = SharingStarted.WhileSubscribed(5000)
+    )
+
     init {
-        getProductsViewModel()
+        //getProductsViewModel()
+        //getProductsRemote()
+        productsStateInFlow()
     }
 
     fun getProductsViewModel() = viewModelScope.launch {
@@ -42,7 +53,7 @@ class ProductsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun getProducts() {
+    fun getProductsRemote() {
         viewModelScope.launch {
             useCaseProducts.getProductsRemoteUseCase()
                 .collectLatest { state ->
@@ -51,16 +62,18 @@ class ProductsViewModel @Inject constructor(
         }
     }
 
-    //stateIn para transformar el Flow en StateFlow automáticamente
-    fun getproducts() = viewModelScope.launch {
-        val uiState = useCaseProducts.getProductsRemoteUseCase()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = ResourceState.LoadingState()
-            )
-
+    fun productsStateInFlow(){
+        viewModelScope.launch {
+            useCaseProducts.getProductsRemoteUseCase()
+                .onStart { _uiStateProducts.value = ResourceState.LoadingState() }
+                .catch { it ->
+                    _uiStateProducts.value = ResourceState.FailureState(message = it.message.toString())
+                }
+                .collect { _uiStateProducts.value = it }
+        }
     }
+
+
 
 
 
