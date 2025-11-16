@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.maggiver.marketshop.ui.theme.MarketShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +42,13 @@ class MainActivity : ComponentActivity() {
 @PreviewScreenSizes
 @Composable
 fun MarketShopApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+    //var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+
+    val navController = rememberNavController()
+
+    // Para detectar qué ruta está activa
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -66,29 +74,6 @@ fun MarketShopApp() {
             )
         }
     }
-}
+} // MarketShopApp
 
-enum class AppDestinations(
-    val label: String,
-    val icon: ImageVector,
-) {
-    HOME("Home", Icons.Default.Home),
-    FAVORITES("Favorites", Icons.Default.Favorite),
-    PROFILE("Profile", Icons.Default.AccountBox),
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MarketShopTheme {
-        Greeting("Android")
-    }
-}
