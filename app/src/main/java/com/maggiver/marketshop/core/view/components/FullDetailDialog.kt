@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -124,6 +125,7 @@ fun DetailContent(
 
         Box(modifier = Modifier.fillMaxWidth()) {
 
+            /*
             AsyncImage(
                 model = product.thumbnail,
                 contentDescription = product.title,
@@ -131,6 +133,13 @@ fun DetailContent(
                     .fillMaxWidth()
                     .height(300.dp),
                 contentScale = ContentScale.Fit
+            )*/
+
+            ImageSlider(
+                images = product.images,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(320.dp)
             )
 
             // Botón cerrar arriba a la derecha
