@@ -18,7 +18,7 @@ data class ProductDetailResponse(
     @SerializedName("discountPercentage")
     val discountPercentage: Double? = null,
     @SerializedName("id")
-    val id: Int? = null,
+    val id: Int = 0,
     @SerializedName("images")
     val images: List<String?>? = null,
     @SerializedName("meta")

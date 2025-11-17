@@ -36,8 +36,6 @@ class ProductsViewModel @Inject constructor(
     // StateFlow
 
     private var _uiStateProducts = MutableStateFlow<ResourceState<ProductsResponse>>(ResourceState.LoadingState())
-
-
     val uiStateFlowProducts: StateFlow<ResourceState<ProductsResponse>> = _uiStateProducts.asStateFlow().stateIn(
         scope = viewModelScope,
         initialValue = ResourceState.LoadingState(),

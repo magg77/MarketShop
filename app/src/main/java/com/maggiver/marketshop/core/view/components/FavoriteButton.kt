@@ -1,5 +1,6 @@
 package com.maggiver.marketshop.core.view.components
 
+import android.R.attr.onClick
 import androidx.compose.animation.core.EaseOutBack
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -10,7 +11,11 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -19,9 +24,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FavoriteButton(
     isFavorite: Boolean,
-    onClick: () -> Unit,
+    onClick: () -> Unit, // pasamos el nuevo estado
     modifier: Modifier = Modifier
 ) {
+
+
+
     val scale by animateFloatAsState(
         targetValue = if (isFavorite) 1.2f else 1f,
         animationSpec = tween (300, easing = EaseOutBack),
@@ -32,7 +40,9 @@ fun FavoriteButton(
     val tint = if (isFavorite) Color(0xFFE53935) else Color.DarkGray
 
     IconButton (
-        onClick = onClick,
+        onClick = {
+            onClick()        // disparar insert/remove en ViewModel
+        },
         modifier = modifier
             .size(48.dp)
             .graphicsLayer(scaleX = scale, scaleY = scale)
