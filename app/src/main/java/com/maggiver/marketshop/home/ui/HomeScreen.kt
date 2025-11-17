@@ -69,8 +69,6 @@ fun HomeScreen(
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-
-
     LaunchedEffect (uiState) {
         if (uiState is ResourceState.FailureState) {
             snackbarHostState.showSnackbar(uiState.message)

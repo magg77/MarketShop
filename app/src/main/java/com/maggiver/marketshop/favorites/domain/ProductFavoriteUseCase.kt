@@ -1,5 +1,6 @@
 package com.maggiver.marketshop.favorites.domain
 
+import com.maggiver.marketshop.core.valueObjects.ResourceState
 import com.maggiver.marketshop.favorites.data.provider.local.entitiy.ProductEntity
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
 import kotlinx.coroutines.flow.Flow
@@ -13,5 +14,7 @@ interface ProductFavoriteUseCase {
     suspend fun insertProductFavoriteUseCase(product: ProductDetailResponse)
 
     suspend fun removeProductFavoriteUseCase(productDetailResponse: ProductDetailResponse)
+
+    suspend fun getAllProductsFavoriteUseCase(): Flow<ResourceState<List<ProductDetailResponse>>>
 
 }

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b8d18a2d58a6585f90775f32baeda028",
+    "identityHash": "1c004a7cdf1b83ef67598c5d245ee25b",
     "entities": [
       {
         "tableName": "productEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `description` TEXT, `rating` REAL, `images` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `title` TEXT, `description` TEXT, `price` REAL, `rating` REAL, `thumbnail` TEXT, `images` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -25,9 +25,19 @@
             "affinity": "TEXT"
           },
           {
+            "fieldPath": "price",
+            "columnName": "price",
+            "affinity": "REAL"
+          },
+          {
             "fieldPath": "rating",
             "columnName": "rating",
             "affinity": "REAL"
+          },
+          {
+            "fieldPath": "thumbnail",
+            "columnName": "thumbnail",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "images",
@@ -45,7 +55,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b8d18a2d58a6585f90775f32baeda028')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1c004a7cdf1b83ef67598c5d245ee25b')"
     ]
   }
 }

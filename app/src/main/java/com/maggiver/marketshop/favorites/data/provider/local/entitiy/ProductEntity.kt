@@ -12,16 +12,20 @@ data class ProductEntity(
     @PrimaryKey(autoGenerate = false) val id: Int = 0,
     @ColumnInfo val title: String?,
     @ColumnInfo val description: String?,
+    @ColumnInfo val price: Double?,
     @ColumnInfo val rating: Double?,
+    @ColumnInfo val thumbnail: String?,
     @ColumnInfo val images: List<String?>?
 )
 
-fun ProductEntity.toDomain(): ProductDetailResponse {
+fun ProductEntity.toProductDetail(): ProductDetailResponse {
     return ProductDetailResponse(
         id = this.id,
         title = this.title,
         description = this.description,
+        price = this.price,
         rating = this.rating,
+        thumbnail = this.thumbnail,
         images = this.images
     )
 }
@@ -30,8 +34,10 @@ fun ProductDetailResponse.toEntity(): ProductEntity {
     return ProductEntity(
         id = this.id,
         description = this.description,
+        price = this.price,
         rating = this.rating,
         title = this.title,
+        thumbnail = this.thumbnail,
         images = this.images ?: emptyList()
     )
 }

@@ -48,7 +48,6 @@ fun FullDetailDialog(
     uiStateDetailProduct: ResourceState<ProductDetailResponse>?,
     onClose: () -> Unit,
     viewModelProducts: ProductsViewModel = hiltViewModel(),
-
 ) {
     Dialog (
         onDismissRequest = onClose,

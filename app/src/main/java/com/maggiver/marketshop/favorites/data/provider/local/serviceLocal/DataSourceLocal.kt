@@ -13,4 +13,6 @@ interface DataSourceLocal {
 
     suspend fun removeFavorite(productEntity: ProductEntity)
 
+    suspend fun getAllProductsFavorite(): List<ProductEntity>
+
 }

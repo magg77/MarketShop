@@ -1,13 +1,15 @@
 package com.maggiver.marketshop.favorites.data.repository
 
-import android.util.Log
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
+import com.maggiver.marketshop.core.valueObjects.ResourceState
 import com.maggiver.marketshop.favorites.data.provider.local.entitiy.ProductEntity
 import com.maggiver.marketshop.favorites.data.provider.local.entitiy.toEntity
+import com.maggiver.marketshop.favorites.data.provider.local.entitiy.toProductDetail
 import com.maggiver.marketshop.favorites.data.provider.local.serviceLocal.DataSourceLocalImpl
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ProductFavoriteRepositoryLocalImpl @Inject constructor(private val localDataSource: DataSourceLocalImpl):
@@ -29,6 +31,8 @@ class ProductFavoriteRepositoryLocalImpl @Inject constructor(private val localDa
             title = productDetailResponse.title,
             description = productDetailResponse.description,
             rating = productDetailResponse.rating,
+            thumbnail = productDetailResponse.thumbnail,
+            price = productDetailResponse.price,
             images = productDetailResponse.images
         )
 
@@ -40,6 +44,25 @@ class ProductFavoriteRepositoryLocalImpl @Inject constructor(private val localDa
     override suspend fun removeProductFavoriteRepository(productDetailResponse: ProductDetailResponse) {
         localDataSource.removeFavorite(productEntity = productDetailResponse.toEntity())
     }
+
+    override suspend fun getAllProductsFavoriteRepository(): Flow<ResourceState<List<ProductDetailResponse>>> =
+        flow {
+
+            emit(ResourceState.LoadingState())
+
+            try {
+
+                val productFavorites = withContext(Dispatchers.IO){
+                    localDataSource.getAllProductsFavorite()
+                        .map { it.toProductDetail() }
+                }
+
+                emit(ResourceState.SuccessState(productFavorites))
+
+            } catch (e: Exception){
+                emit(ResourceState.FailureState(message = "${e.localizedMessage}"))
+            }
+        }
 
 
 }
