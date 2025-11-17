@@ -2,6 +2,7 @@ package com.maggiver.marketshop.home.domain
 
 import android.content.Context
 import com.maggiver.marketshop.core.valueObjects.ResourceState
+import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductsResponse
 import com.maggiver.marketshop.home.data.repository.remote.ProductsRemoteRepository
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,10 @@ class ProductsRemoteUseCaseImpl @Inject constructor(private val repository: Prod
 
     override suspend fun getProductsRemoteUseCase(): Flow<ResourceState<ProductsResponse>> =
         repository.getProductsRemoteRepository()
+
+
+    override suspend fun getProductDetailUseCase(productId: Int): Flow<ResourceState<ProductDetailResponse>> =
+        repository.getProductDetailRemoteRepository(productId = productId)
 
 
 }

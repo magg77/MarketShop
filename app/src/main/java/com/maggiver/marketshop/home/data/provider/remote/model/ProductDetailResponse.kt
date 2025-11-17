@@ -1,23 +1,10 @@
 package com.maggiver.marketshop.home.data.provider.remote.model
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import com.google.gson.annotations.SerializedName
-
-
-@Parcelize
-data class ProductsResponse(
-    @SerializedName("limit")
-    val limit: Int? = null,
-    @SerializedName("products")
-    val products: List<Product> = listOf(),
-    @SerializedName("skip")
-    val skip: Int? = null,
-    @SerializedName("total")
-    val total: Int? = null
-): Parcelable
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Product(
+data class ProductDetailResponse(
     @SerializedName("availabilityStatus")
     val availabilityStatus: String? = null,
     @SerializedName("brand")
@@ -27,15 +14,15 @@ data class Product(
     @SerializedName("description")
     val description: String? = null,
     @SerializedName("dimensions")
-    val dimensions: Dimensions? = null,
+    val dimensions: DimensionsProductDetail? = null,
     @SerializedName("discountPercentage")
     val discountPercentage: Double? = null,
     @SerializedName("id")
-    val id: Int = 0,
+    val id: Int? = null,
     @SerializedName("images")
     val images: List<String?>? = null,
     @SerializedName("meta")
-    val meta: Meta? = null,
+    val meta: MetaDetail? = null,
     @SerializedName("minimumOrderQuantity")
     val minimumOrderQuantity: Int? = null,
     @SerializedName("price")
@@ -45,7 +32,7 @@ data class Product(
     @SerializedName("returnPolicy")
     val returnPolicy: String? = null,
     @SerializedName("reviews")
-    val reviews: List<Review?>? = null,
+    val reviews: List<ReviewDetail?>? = null,
     @SerializedName("shippingInformation")
     val shippingInformation: String? = null,
     @SerializedName("sku")
@@ -65,7 +52,7 @@ data class Product(
 ): Parcelable
 
 @Parcelize
-data class Dimensions(
+data class DimensionsProductDetail(
     @SerializedName("depth")
     val depth: Double? = null,
     @SerializedName("height")
@@ -75,7 +62,7 @@ data class Dimensions(
 ): Parcelable
 
 @Parcelize
-data class Meta(
+data class MetaDetail(
     @SerializedName("barcode")
     val barcode: String? = null,
     @SerializedName("createdAt")
@@ -87,7 +74,7 @@ data class Meta(
 ): Parcelable
 
 @Parcelize
-data class Review(
+data class ReviewDetail(
     @SerializedName("comment")
     val comment: String? = null,
     @SerializedName("date")

@@ -2,9 +2,12 @@ package com.maggiver.marketshop.home.presentation
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maggiver.marketshop.core.valueObjects.ResourceState
+import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductsResponse
 import com.maggiver.marketshop.home.domain.ProductsRemoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,13 +36,22 @@ class ProductsViewModel @Inject constructor(
     // StateFlow
 
     private var _uiStateProducts = MutableStateFlow<ResourceState<ProductsResponse>>(ResourceState.LoadingState())
-    val uiStateProducts: StateFlow<ResourceState<ProductsResponse>> = _uiStateProducts
+
 
     val uiStateFlowProducts: StateFlow<ResourceState<ProductsResponse>> = _uiStateProducts.asStateFlow().stateIn(
         scope = viewModelScope,
         initialValue = ResourceState.LoadingState(),
         started = SharingStarted.WhileSubscribed(5000)
     )
+
+    private val _selectedProductId = MutableStateFlow<Int?>(null)
+    val selectedProductId: StateFlow<Int?> = _selectedProductId
+
+    private val _showDetailDialog = MutableStateFlow(false)
+    val showDetailDialog: StateFlow<Boolean> = _showDetailDialog
+
+    private var _uiStateProductDetail = MutableStateFlow<ResourceState<ProductDetailResponse>>(ResourceState.LoadingState())
+    val uiStateProductDetail: StateFlow<ResourceState<ProductDetailResponse>> = _uiStateProductDetail
 
     init {
         //getProductsViewModel()
@@ -53,14 +65,6 @@ class ProductsViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun getProductsRemote() {
-        viewModelScope.launch {
-            useCaseProducts.getProductsRemoteUseCase()
-                .collectLatest { state ->
-                    _uiStateProducts.value = state
-            }
-        }
-    }
 
     fun productsStateInFlow(){
         viewModelScope.launch {
@@ -72,6 +76,31 @@ class ProductsViewModel @Inject constructor(
                 .collect { _uiStateProducts.value = it }
         }
     }
+
+
+    fun onProductClick(productId: Int) {
+        _selectedProductId.value = productId
+        fetchProductDetails(productId = productId)
+    }
+
+    fun fetchProductDetails(productId: Int) {
+
+        _showDetailDialog.value = true
+
+        viewModelScope.launch {
+            useCaseProducts.getProductDetailUseCase(productId = productId)
+                .collectLatest { detailProduct ->
+                    _uiStateProductDetail.value = detailProduct
+                }
+        }
+    }
+
+    fun closeDetailDialog() {
+        _showDetailDialog.value = false
+        _uiStateProductDetail.value = ResourceState.LoadingState()
+    }
+
+
 
 
 
