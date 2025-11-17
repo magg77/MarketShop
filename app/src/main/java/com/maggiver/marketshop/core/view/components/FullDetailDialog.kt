@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,16 +78,15 @@ fun FullDetailDialog(
                 when (uiStateDetailProduct) {
 
                     is ResourceState.LoadingState -> {
-                        Log.i(
-                            "detailproduct9",
-                            "sdjflkasjdflkasjdflajdflajsdlfajdslfjalksdfjalksdfjjlasdj"
-                        )
                         CircularProgressIndicatorOffers(statusLoading = true)
                     }
 
                     is ResourceState.SuccessState -> {
                         CircularProgressIndicatorOffers(statusLoading = false)
-                        DetailContent(uiStateDetailProduct.data, onClose)
+                        DetailContent(
+                            product = uiStateDetailProduct.data,
+                            onClose = onClose
+                        )
                     }
 
                     is ResourceState.FailureState -> {
@@ -108,28 +112,44 @@ fun DetailContent(
     product: ProductDetailResponse,
     onClose: () -> Unit
 ) {
+
+    var isFavorite by remember { mutableStateOf(false) }
+
+
     Column (
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
 
-        // Cerrar
-        IconButton (
-            onClick = onClose,
-            modifier = Modifier.align(Alignment.End)
-        ) {
-            Icon(Icons.Default.Close, contentDescription = null)
-        }
+        Box(modifier = Modifier.fillMaxWidth()) {
 
-        AsyncImage(
-            model = product.thumbnail,
-            contentDescription = product.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp),
-            contentScale = ContentScale.Crop
-        )
+            AsyncImage(
+                model = product.thumbnail,
+                contentDescription = product.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                contentScale = ContentScale.Fit
+            )
+
+            // Botón cerrar arriba a la derecha
+            IconButton (
+                onClick = onClose,
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                Icon(Icons.Default.Close, contentDescription = null)
+            }
+
+            // Botón favorito elegante
+            FavoriteButton(
+                isFavorite = isFavorite,
+                onClick = { isFavorite = !isFavorite },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(12.dp)
+            )
+        }
 
         Text(
             text = product.title ?: "Sin titulo",
@@ -146,108 +166,6 @@ fun DetailContent(
             text = product.description ?: "",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(20.dp)
-        )
-    }
-}
-
-@Composable
-fun RatingBar(
-    rating: Double,
-    modifier: Modifier = Modifier,
-    maxRating: Int = 5
-) {
-    val filledStars = rating.toInt()
-    val halfStar = (rating - filledStars) >= 0.5
-
-    Row (verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-
-        // Estrellas llenas
-        repeat(filledStars) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                tint = Color(0xFFFFC107), // Amarillo dorado
-                modifier = Modifier.size(22.dp)
-            )
-        }
-
-        // Media estrella
-        if (halfStar) {
-            Icon(
-                imageVector = Icons.Default.StarHalf,
-                contentDescription = null,
-                tint = Color(0xFFFFC107),
-                modifier = Modifier.size(22.dp)
-            )
-        }
-
-        // Estrellas vacías
-        repeat(maxRating - filledStars - if (halfStar) 1 else 0) {
-            Icon(
-                imageVector = Icons.Default.StarBorder,
-                contentDescription = null,
-                tint = Color(0xFFFFC107),
-                modifier = Modifier.size(22.dp)
-            )
-        }
-
-        // Texto del rating
-        Text(
-            text = "  ${String.format("%.1f", rating)}",
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            color = Color.Gray
-        )
-    }
-}
-
-@Composable
-fun RatingBarAnimada(
-    rating: Double,
-    modifier: Modifier = Modifier,
-    maxRating: Int = 5
-) {
-    val animatedRating = animateFloatAsState(
-        targetValue = rating.toFloat(),
-        animationSpec = tween(durationMillis = 800, easing = LinearOutSlowInEasing),
-        label = ""
-    )
-
-    val filledStars = animatedRating.value.toInt()
-    val halfStar = (animatedRating.value - filledStars) >= 0.5f
-
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
-
-        repeat(filledStars) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = null,
-                tint = Color(0xFFFFC107),
-                modifier = Modifier.size(24.dp)
-            )
-        }
-
-        if (halfStar) {
-            Icon(
-                imageVector = Icons.Default.StarHalf,
-                contentDescription = null,
-                tint = Color(0xFFFFC107),
-                modifier = Modifier.size(24.dp)
-            )
-        }
-
-        repeat(maxRating - filledStars - if (halfStar) 1 else 0) {
-            Icon(
-                imageVector = Icons.Default.StarBorder,
-                contentDescription = null,
-                tint = Color(0xFFFFC107),
-                modifier = Modifier.size(24.dp)
-            )
-        }
-
-        Text(
-            text = "  ${String.format("%.1f", rating)}",
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-            color = Color.Gray
         )
     }
 }

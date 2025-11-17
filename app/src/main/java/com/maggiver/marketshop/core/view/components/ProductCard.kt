@@ -67,7 +67,8 @@ fun ProductCard(
                     contentScale = ContentScale.Fit
                 )
 
-                // ⭐ Botón favoritos sobre la imagen
+                // otón favoritos sobre la imagen
+                /*
                 IconButton (
                     onClick = onFavoriteClick,
                     modifier = Modifier
@@ -87,6 +88,7 @@ fun ProductCard(
                             .padding(6.dp)
                     )
                 }
+                */
             }
 
             Column(modifier = Modifier.padding(8.dp)) {
