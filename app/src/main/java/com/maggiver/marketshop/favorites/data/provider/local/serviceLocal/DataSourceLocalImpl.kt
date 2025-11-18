@@ -22,7 +22,7 @@ class DataSourceLocalImpl @Inject constructor(private val localService: LocalSer
         localService.getProductFavorite(productEntity.id)?.let { localService.deleteFavorite(productEntity = productEntity) }
     }
 
-    override suspend fun getAllProductsFavorite(): List<ProductEntity> =
+    override fun getAllProductsFavorite(): Flow<List<ProductEntity>> =
         localService.getAllProductsFavorite()
 
 

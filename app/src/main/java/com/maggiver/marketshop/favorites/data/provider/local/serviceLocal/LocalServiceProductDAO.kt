@@ -25,7 +25,7 @@ interface LocalServiceProductDAO {
     suspend fun deleteFavorite(productEntity: ProductEntity)
 
     @Query("SELECT * FROM productEntity")
-    suspend fun getAllProductsFavorite(): List<ProductEntity>
+    fun getAllProductsFavorite(): Flow<List<ProductEntity>>
 
 
 }

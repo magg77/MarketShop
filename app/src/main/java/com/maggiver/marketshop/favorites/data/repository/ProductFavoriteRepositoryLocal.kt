@@ -16,7 +16,7 @@ interface ProductFavoriteRepositoryLocal {
 
     suspend fun removeProductFavoriteRepository(productDetailResponse: ProductDetailResponse)
 
-    suspend fun getAllProductsFavoriteRepository(): Flow<ResourceState<List<ProductDetailResponse>>>
+    fun getAllProductsFavoriteRepository(): Flow<ResourceState<List<ProductDetailResponse>>>
 
 
 

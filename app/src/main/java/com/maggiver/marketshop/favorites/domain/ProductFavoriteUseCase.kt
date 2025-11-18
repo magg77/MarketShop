@@ -15,6 +15,6 @@ interface ProductFavoriteUseCase {
 
     suspend fun removeProductFavoriteUseCase(productDetailResponse: ProductDetailResponse)
 
-    suspend fun getAllProductsFavoriteUseCase(): Flow<ResourceState<List<ProductDetailResponse>>>
+    fun getAllProductsFavoriteUseCase(): Flow<ResourceState<List<ProductDetailResponse>>>
 
 }

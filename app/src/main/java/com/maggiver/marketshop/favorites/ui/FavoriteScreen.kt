@@ -14,8 +14,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -42,13 +46,10 @@ fun FavoriteScreen(
     viewModelFavorite: ProductFavoriteViewModel = hiltViewModel()
 ) {
 
-    val uiStateFavorites = viewModelFavorite.uiStateProductsFavorite.collectAsStateWithLifecycle().value
+    val uiStateFavorites = viewModelFavorite.uiStateProductsFavoriteLocal.collectAsStateWithLifecycle().value
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Se ejecuta SIEMPRE al entrar al screen (solo una vez por entrada)
-    LaunchedEffect(Unit) {
-        viewModelFavorite.getProductFavoriteRoom()
-    }
+
 
     LaunchedEffect (uiStateFavorites) {
         if (uiStateFavorites is ResourceState.FailureState) {
@@ -78,7 +79,10 @@ fun FavoriteScreen(
 
                     HomeContentFavorite(
                         product = uiStateFavorites.data,
-                        modifier = Modifier.padding(padding)
+                        modifier = Modifier.padding(padding),
+                        onRemoveFavorite = {product ->
+                            viewModelFavorite.removeFavorite(product = product)
+                        }
                     )
 
                 }
@@ -98,7 +102,8 @@ fun FavoriteScreen(
 @Composable
 fun HomeContentFavorite(
     product: List<ProductDetailResponse>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRemoveFavorite: (ProductDetailResponse) -> Unit
 ) {
     LazyColumn (modifier = modifier.fillMaxSize()) {
 
@@ -133,11 +138,11 @@ fun HomeContentFavorite(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
-                    Column (modifier = Modifier.weight(1f)) {
+                    Column (modifier = Modifier.weight(1f).padding(top = 16.dp)) {
 
                         Text(
                             text = product.title ?: "Sin título",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                         Text(
@@ -146,6 +151,18 @@ fun HomeContentFavorite(
                             color = Color(0xFF009900)
                         )
                     }
+
+                    // icon eliminar favorite product
+                    IconButton (
+                        onClick = { onRemoveFavorite(product) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = "Quitar de favoritos",
+                            tint = Color.Red
+                        )
+                    }
+
                 }
 
             }

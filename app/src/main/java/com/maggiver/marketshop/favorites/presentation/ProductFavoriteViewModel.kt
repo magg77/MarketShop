@@ -37,9 +37,17 @@ class ProductFavoriteViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000)
     )
 
-
     private val _favoriteState = MutableStateFlow<Boolean>(false)
     val favoriteState: MutableStateFlow<Boolean> = _favoriteState
+
+
+    val uiStateProductsFavoriteLocal: StateFlow<ResourceState<List<ProductDetailResponse>>> =
+        productFavoriteUseCase.getAllProductsFavoriteUseCase()
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                ResourceState.LoadingState()
+            )
 
 
     fun isFavoriteRoom(productId: Int){
@@ -77,6 +85,15 @@ class ProductFavoriteViewModel @Inject constructor(
                 .collect { _uiStateProductsFavorite.value = it }
         }
     }
+
+    fun removeFavorite(product: ProductDetailResponse) {
+        viewModelScope.launch {
+            productFavoriteUseCase.removeProductFavoriteUseCase(product)
+        }
+    }
+
+
+
 
 
 

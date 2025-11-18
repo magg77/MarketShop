@@ -8,7 +8,10 @@ import com.maggiver.marketshop.favorites.data.provider.local.serviceLocal.DataSo
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -45,6 +48,23 @@ class ProductFavoriteRepositoryLocalImpl @Inject constructor(private val localDa
         localDataSource.removeFavorite(productEntity = productDetailResponse.toEntity())
     }
 
+
+    override fun getAllProductsFavoriteRepository(): Flow<ResourceState<List<ProductDetailResponse>>> =
+        localDataSource
+            .getAllProductsFavorite()  // Flow<List<ProductEntity>>
+            .map<List<ProductEntity>, ResourceState<List<ProductDetailResponse>>> { list ->
+                val mapped = list.map { it.toProductDetail() }
+                ResourceState.SuccessState(mapped)
+            }
+            .onStart {
+                emit(ResourceState.LoadingState())
+            }
+            .catch { e ->
+                emit(ResourceState.FailureState(e.localizedMessage ?: "Error inesperado"))
+            }
+
+
+    /*
     override suspend fun getAllProductsFavoriteRepository(): Flow<ResourceState<List<ProductDetailResponse>>> =
         flow {
 
@@ -63,6 +83,7 @@ class ProductFavoriteRepositoryLocalImpl @Inject constructor(private val localDa
                 emit(ResourceState.FailureState(message = "${e.localizedMessage}"))
             }
         }
+     */
 
 
 }

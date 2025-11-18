@@ -26,7 +26,7 @@ ProductFavoriteUseCase {
     override suspend fun removeProductFavoriteUseCase(productDetailResponse: ProductDetailResponse) =
         repositoryLocal.removeProductFavoriteRepository(productDetailResponse = productDetailResponse)
 
-    override suspend fun getAllProductsFavoriteUseCase(): Flow<ResourceState<List<ProductDetailResponse>>> =
+    override fun getAllProductsFavoriteUseCase(): Flow<ResourceState<List<ProductDetailResponse>>> =
         repositoryLocal.getAllProductsFavoriteRepository()
 
 
