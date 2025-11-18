@@ -1,9 +1,12 @@
-# 📱 Proyecto de Aplicación Android
+# 📱 MarketShop Android Application Project
+
+You can view the list of products available to you, the details of each product in full dialog, save your favorite products and view them without an internet connection, and check the network status of your device.
 
 # Screenshots
 ![Test Image 2](https://github.com/magg77/MarketShop/blob/feature/favorites/screens/screns.png)
 
-# 🛠 Requisitos
+
+# 🛠 Requirements
 MarketShop is a Kotlin application for Android mobile devices. Before running the project, please ensure you consider the following requirements:
 
 - Android Studio Otter | 2025.2.1 ->  Build #AI-252.25557.131.2521.14344949, built on October 28, 2025
@@ -15,14 +18,17 @@ MarketShop is a Kotlin application for Android mobile devices. Before running th
 - Minimum version 23
 - Maximum version 36
 
-# 🚀 Instrucciones para ejecutar el proyecto
-- git clone https://github.com/magg77/MarketShop
-- cd tu-repositorio
-- Abrir el proyecto con el ide android studio
-- sync dependencies with gradle
-- Ejecutar el siguiente comando en el terminal de Android Studio: ./gradlew clean build
+# 🚀 Instructions for running the project
 
-# 🚀 Apis y servicios implementados
+Run the following commands in git bash
+
+- git clone https://github.com/magg77/MarketShop
+- cd [your-repository]
+- Open the project with the Android Studio IDE
+- Sync dependencies with gradle
+- Run the following command in the Android Studio terminal: ./gradlew clean build
+
+# 🚀 APIs and implemented services
 - https://dummyjson.com/
 - get: products
 - get: products/{id}
