@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.maggiver.marketshop.core.valueObjects.ResourceState
 import com.maggiver.marketshop.core.view.components.CircularProgressIndicatorOffers
+import com.maggiver.marketshop.core.view.components.EmptyFavoriteView
 import com.maggiver.marketshop.favorites.presentation.ProductFavoriteViewModel
 import com.maggiver.marketshop.home.data.provider.remote.model.ProductDetailResponse
 
@@ -75,7 +76,24 @@ fun FavoriteScreen(
 
                     CircularProgressIndicatorOffers(statusLoading = false)
 
-                    Log.i("datafavorite", "${uiStateFavorites.data}")
+                    val list = uiStateFavorites.data
+                    if (list.isEmpty()) {
+                        EmptyFavoriteView(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding)
+                        )
+                    } else {
+                        HomeContentFavorite(
+                            product = list,
+                            modifier = Modifier.padding(padding),
+                            onRemoveFavorite = { product ->
+                                viewModelFavorite.removeFavorite(product)
+                            }
+                        )
+                    }
+
+
 
                     HomeContentFavorite(
                         product = uiStateFavorites.data,
