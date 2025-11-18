@@ -1,7 +1,7 @@
 # 📱 Proyecto de Aplicación Android
 
 # Screenshots
-![Test Image 2](https://github.com/magg77/MarketShop/blob/feature-favorites/screens/screens.png)
+![Test Image 2](https://github.com/magg77/MarketShop/blob/feature/favorites/screens/screns.png)
 
 # 🛠 Requisitos
 MarketShop is a Kotlin application for Android mobile devices. Before running the project, please ensure you consider the following requirements:
