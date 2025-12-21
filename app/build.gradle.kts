@@ -151,9 +151,13 @@ dependencies {
 
     // Material 3
     implementation(libs.material3)
-    implementation(libs.material3.window)
-    implementation(libs.material3.adaptive)
     implementation(libs.material.icons.extended)
+    implementation(libs.material3.components.ui)
+    implementation(libs.adaptive)
+    implementation(libs.adaptive.layout)
+    implementation(libs.adaptive.navigation)
+
+
 
     // SplashScreen & Accompanist
     implementation(libs.splashscreen)

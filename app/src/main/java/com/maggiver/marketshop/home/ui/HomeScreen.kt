@@ -45,6 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import coil.compose.AsyncImage
 import com.maggiver.marketshop.core.valueObjects.ResourceState
 import com.maggiver.marketshop.core.view.components.CircularProgressIndicatorOffers
@@ -75,12 +77,13 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0xFFE80000)))
-    { padding ->
+
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFE80000)))
+        { padding ->
 
             when (uiState) {
 
@@ -119,14 +122,17 @@ fun HomeScreen(
 
             } // when
 
-        if (showDialog){
-            FullDetailDialog (
-                uiStateDetailProduct = uiStateDetailProduct,
-                onClose = { viewModelProducts.closeDetailDialog() }
-            )
+            if (showDialog){
+                FullDetailDialog (
+                    uiStateDetailProduct = uiStateDetailProduct,
+                    onClose = { viewModelProducts.closeDetailDialog() }
+                )
+            }
+
         }
 
-    }
+
+
 
 }
 
