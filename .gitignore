@@ -24,3 +24,4 @@ local.properties
 /app/hmsVersion/*
 /app/release/
 /app/release/*
+/.kotlin

@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.window.core.layout.WindowSizeClass
 import com.maggiver.marketshop.favorites.ui.FavoriteScreen
 import com.maggiver.marketshop.home.ui.HomeScreen
 import com.maggiver.marketshop.profile.ui.ProfileScreen
