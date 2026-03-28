@@ -1,12 +1,8 @@
-
 plugins {
-
-    // Android Gradle Plugin
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     //alias(libs.plugins.androidLib)
 
-    // Kotlin
-    alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.kotlinParcelize)
     //alias(libs.plugins.kotlinRoom)
@@ -22,8 +18,6 @@ plugins {
 
     // Room
     alias(libs.plugins.roomPlugin)
-
-
 }
 
 android {
@@ -48,17 +42,7 @@ android {
     }
 
     buildTypes {
-
-        debug {
-            applicationIdSuffix = ".Debug"
-            isDebuggable = true
-
-            manifestPlaceholders["cleartextTrafficPermitted"] = true
-            resValue("string", "nameApp", "MarketShop [DEBUG]")
-        }
-
         release {
-
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
@@ -67,6 +51,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+
+        debug {
+            applicationIdSuffix = ".Debug"
+            isDebuggable = true
+
+            manifestPlaceholders["cleartextTrafficPermitted"] = true
+            resValue("string", "nameApp", "MarketShop [DEBUG]")
         }
     }
 
@@ -100,14 +92,11 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
-    implementation(libs.constraintlayout.compose)
+
 
     // Coroutines
     implementation(libs.coroutines.android)
     implementation(libs.coroutines.core)
-
-    // WorkManager
-    implementation(libs.work.runtime.ktx)
 
     // Compose + ViewModel + LiveData
     implementation(libs.lifecycle.viewmodel.compose)
@@ -121,6 +110,7 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.ui.util)
     implementation(libs.compose.animated)
+    implementation(libs.ui.text.google.fonts)
 
     debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.compose.ui.tooling.debug)
@@ -134,6 +124,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.work)
     implementation(libs.hilt.navigation.compose)
+
+    // workmanager
+    implementation(libs.work.runtime.ktx)
 
     // Room
     implementation(libs.room.runtime)
@@ -157,8 +150,6 @@ dependencies {
     implementation(libs.adaptive.layout)
     implementation(libs.adaptive.navigation)
 
-
-
     // SplashScreen & Accompanist
     implementation(libs.splashscreen)
     implementation(libs.accompanist.systemuicontroller)
@@ -178,4 +169,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.compose.ui.test.junit4)
     androidTestImplementation(platform(libs.compose.bom))
+
+    androidTestImplementation(libs.work.testing)
 }
