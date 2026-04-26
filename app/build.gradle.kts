@@ -1,23 +1,22 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    //alias(libs.plugins.kotlin.android)
     //alias(libs.plugins.androidLib)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 
     alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.kotlinParcelize)
-    //alias(libs.plugins.kotlinRoom)
-
-    // KSP
-    alias(libs.plugins.ksp)
-
-    // Hilt
-    alias(libs.plugins.hilt)
-
-    // Navigation Safe Args
     alias(libs.plugins.safeArgs)
-
-    // Room
     alias(libs.plugins.roomPlugin)
+}
+
+kotlin {
+    jvmToolchain(21)
+    compilerOptions {
+        //languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
+    }
 }
 
 android {
@@ -62,19 +61,11 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         viewBinding = true
         buildConfig = true
         compose = true
+        resValues = true
     }
 
     packaging {
@@ -85,48 +76,52 @@ android {
         schemaDirectory("$projectDir/schemas")
     }
 
+    packaging {
+        resources {
+            // Esto elimina la colisión entre hilt-compiler y dagger-compiler
+            excludes += "META-INF/gradle/incremental.annotation.processors"
+        }
+    }
+
 }
 
 dependencies {
     // Core
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.activity.compose)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
 
+    // lifeCycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
     // Coroutines
     implementation(libs.coroutines.android)
     implementation(libs.coroutines.core)
 
-    // Compose + ViewModel + LiveData
-    implementation(libs.lifecycle.viewmodel.compose)
-    implementation(libs.runtime.livedata)
-    implementation(libs.lifecycle.runtime.compose)
-
-    // Compose UI
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
+    // compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.compose.ui.util)
     implementation(libs.compose.animated)
     implementation(libs.ui.text.google.fonts)
 
-    debugImplementation(libs.compose.ui.test.manifest)
-    implementation(libs.compose.ui.tooling.debug)
-
     // Navigation
     implementation(libs.navigation.compose)
     implementation(libs.navigation.common.ktx)
+
+    // workmanager
+    implementation(libs.work.runtime.ktx)
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.work)
     implementation(libs.hilt.navigation.compose)
-
-    // workmanager
-    implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.lifecycle.viewmodel)
 
     // Room
     implementation(libs.room.runtime)
@@ -168,7 +163,7 @@ dependencies {
     androidTestImplementation(libs.android.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.compose.ui.test.junit4)
-    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     androidTestImplementation(libs.work.testing)
 }
